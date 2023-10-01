@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TrainStationsAPI.DataObjects;
+using TrainStationsAPI.Exceptions;
+using TrainStationsAPI.Models;
+using TrainStationsAPI.Services;
 
 namespace TrainStationsAPI.Controllers;
 
@@ -9,33 +12,48 @@ namespace TrainStationsAPI.Controllers;
 public class TrainStationsController : ControllerBase {
     
     private readonly ILogger<TrainStationsController> _logger;
+    private readonly ITrainStationService _trainStationService;
     
-    public TrainStationsController(ILogger<TrainStationsController> logger)
+    public TrainStationsController(ILogger<TrainStationsController> logger, ITrainStationService trainStationService)
     {
         this._logger = logger;
+        _trainStationService = trainStationService;
     }
     
     
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult GetAllStations()
+    public ActionResult<IEnumerable<TrainStation>> GetAllStations()
     {
-        _logger.Log(LogLevel.Information, "Listando todas as estações cadastradas no sistema");
-        return Ok("");
+        _logger.Log(LogLevel.Information, "Listando todas as estações cadastradas");
+        var stations = _trainStationService.ListAllStations();
+        return Ok(stations);
     }
     
     
     [HttpGet("{lineNumber}")]
-    public IActionResult GetStationsByLine(int lineNumber)
+    public ActionResult<IEnumerable<TrainStation>> GetStationsByLine(int lineNumber)
     {
-        return Ok();
+        var stations =  _trainStationService.ListAllLineStations(lineNumber);
+        return Ok(stations);
     }
     
     [HttpPost("{lineNumber}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public IActionResult AddStation(int lineNumber, StationDto station)
+    public async Task<IActionResult> AddStation(int lineNumber, StationDto station)
     {
-        return Created("", null);
+        try
+        {
+            await _trainStationService.AdicionarEstacao(lineNumber, station);
+            return Created("", null);
+        }catch(LineNotFoundException lineNotFoundException)
+        {
+            return NotFound();
+        }catch(Exception exception)
+        {
+            return UnprocessableEntity();
+        }
+
     }
     
     

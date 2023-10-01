@@ -5,13 +5,12 @@ using TrainStationsAPI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ILineService, LineService>();
+builder.Services.AddScoped<ITrainStationService, TrainStationService>();
 
 string connectionStr =  builder.Configuration.GetConnectionString("SqliteConnectionString");
 
 // Add services to the container.
 builder.Services.AddDbContext<TrainStationsContext>(opt => opt.UseSqlite(connectionStr));
-
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

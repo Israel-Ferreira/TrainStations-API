@@ -11,13 +11,13 @@ public class TrainStationsContext : DbContext
 
     public DbSet<TrainStation> TrainStations { get; set; } = null!;
 
-    public DbSet<Line> Lines { get; set; } = null!;
+    public DbSet<Line?> Lines { get; set; } = null!;
     
     
-   
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
         modelBuilder.Entity<Line>().HasData(
             new Line(1, "Azul", 20.2, 1.6000, "Metrô SP") { LineId = 1},
             new Line(2, "Verde", 14.7, 1.6000, "Metrô SP") {LineId = 2},

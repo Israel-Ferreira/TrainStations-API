@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TrainStationsAPI.Models;
 using TrainStationsAPI.Services;
 
 namespace TrainStationsAPI.Controllers;

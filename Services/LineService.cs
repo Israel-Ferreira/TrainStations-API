@@ -14,7 +14,7 @@ public class LineService : ILineService
     }
 
 
-    public IEnumerable<Line> ListarLinhas()
+    public IEnumerable<Line?> ListarLinhas()
     {
         return _dbContext.Lines.ToList();
     }
